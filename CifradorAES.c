@@ -282,53 +282,34 @@ int sBoxCoordenadas(const GerenciadorBlocos *gerenciador,int i, int y, int x, in
 
 //a ideia aqui é trocar o valor de cada um dos termos por suas coordenadas na sbox usando a funcao  sBoxCoordenadas eu pessoalmente quero voltar o resultado uma matriz
 
-
-/*
-GerenciadorBlocos subbytes(GerenciadorBlocos *gerenciador) {
-    GerenciadorBlocos blocoRetorno;
-    inicializaGerenciador(&blocoRetorno); // Initialize blocoRetorno
-    for (size_t i = 0; i <= gerenciador->blocoAtual; i++) {
-        for (size_t y = 0; y < NUM_C; y++) {
-            for (size_t x = 0; x < NUM_C; x++) {
-                int linha, coluna;
-                int posicao = sBoxCoordenadas(gerenciador, i, y, x, &linha, &coluna);
-                printf("0x%2x",gerenciador->blocos[i][y][x]);
-                printf("%d",posicao);
-                blocoRetorno.blocos[i][y][x] = sBox[posicao];
-            }
-        }
-    }
-    return blocoRetorno;
-}
-*/
 GerenciadorBlocos subbytes(GerenciadorBlocos *gerenciador) {
     GerenciadorBlocos blocoRetorno;
     inicializaGerenciador(&blocoRetorno); // Inicializa o blocoRetorno
 
-    // Itera sobre os blocos
+    //itera sobre os blocos
     for (size_t i = 0; i <= gerenciador->blocoAtual; i++) {
-        // Itera sobre as linhas e colunas
+        //itera sobre as linhas e colunas
         for (size_t y = 0; y < NUM_C; y++) {
             for (size_t x = 0; x < NUM_C; x++) {
                 int linha, coluna;
                 int posicao = sBoxCoordenadas(gerenciador, i, y, x, &linha, &coluna);
 
-                // Verifica se a posição é válida
+                //verifica se a posição é válida
                 if (posicao < 0 || posicao >= 256) {
                     fprintf(stderr, "Posição inválida na S-Box: %d\n", posicao);
                     continue;
                 }
 
-                // Obtenha o valor da S-Box
+                //Obtem o valor da sBox
                 uint8_t temp = sBox[posicao];
                 
-                // Adiciona o caractere ao blocoRetorno usando a função adicionarCaractere
+                //add o caractere ao blocoRetorno usando a função adicionarCaractere
                 if (adicionarCaractere(&blocoRetorno, temp) != 0) {
                     fprintf(stderr, "Erro ao adicionar caractere no bloco de retorno\n");
                     return blocoRetorno; // Retorna o blocoRetorno até o ponto onde ele foi atualizado
                 }
 
-                // Imprime valores para depuração
+                //benchmark() so que local;
                 //printf("Bloco[%zu][%zu][%zu]: 0x%02x (Posição S-Box: %d)\n", i, y, x, temp, posicao);
             }
         }
@@ -336,33 +317,82 @@ GerenciadorBlocos subbytes(GerenciadorBlocos *gerenciador) {
     return blocoRetorno;
 }
 
-/*
-GerenciadorBlocos subbytes(GerenciadorBlocos *gerenciador) {
-    GerenciadorBlocos blocoRetorno;
-    inicializaGerenciador(&blocoRetorno); // Initialize blocoRetorno
-    for (size_t i = 0; i <= gerenciador->blocoAtual; i++) {
-        for (size_t y = 0; y < NUM_C; y++) {
-            for (size_t x = 0; x < NUM_C; x++) {
-                int linha, coluna;
-                int posicao = sBoxCoordenadas(gerenciador, i, y, x, &linha, &coluna);
-                uint8_t temp = sBox[posicao];
-                blocoRetorno.blocos[i][y][x] = temp;
-                printf("0x%2x",gerenciador->blocos[i][y][x]);
-                printf("%d",posicao);
+//4.2 uma aventura chamada shiftrows;
 
+//4.2.1 rows de linha
+
+uint8_t mudancaRow(const GerenciadorBlocos *gerenciador,uint8_t bloco, uint8_t linha, uint8_t coluna){
+    uint8_t resultado;
+    if (linha!=0)
+    {
+        if(linha==1)
+        {
+            if(coluna!=3){
+                resultado = gerenciador->blocos[bloco][linha][coluna+1];
+            }
+            else{
+                resultado = gerenciador->blocos[bloco][linha][0];
+            }
+        }
+        if(linha==2){
+            if(coluna<2){
+                resultado = gerenciador->blocos[bloco][linha][coluna+2];
+            }
+            else if(coluna>=2){
+                resultado = gerenciador->blocos[bloco][linha][coluna-2];
+            }
+        }
+        if(linha==3){
+            if(coluna==0){
+                resultado = gerenciador->blocos[bloco][linha][3];
+            }
+            else if(coluna==1){
+                resultado = gerenciador->blocos[bloco][linha][0];
+            }
+            else if(coluna==2){
+                resultado = gerenciador->blocos[bloco][linha][1];
+            }
+            else if(coluna==3){
+                resultado = gerenciador->blocos[bloco][linha][2];
             }
         }
     }
-    return blocoRetorno;
+    else{
+        resultado = gerenciador->blocos[bloco][linha][coluna];
+    }
+    return resultado;
 }
 
-*/
+GerenciadorBlocos  shiftrows(const GerenciadorBlocos *gerenciador)
+{
+    GerenciadorBlocos blocoRetorno;
+    inicializaGerenciador(&blocoRetorno);
+    
+    //itera sobre os blocos primeira linha sem mudanças, segunda linha rotacao 1 byte, terceira linha 2... quarta 3 bytes
+    uint8_t temp,temp1,temp2,temp3;
 
+    for (size_t i = 0; i <= gerenciador->blocoAtual;i++)
+    {
+        for(size_t  y = 0; y < NUM_C; y++)
+        {
+            for(size_t x = 0; x < NUM_C; x++)
+            {
+                uint8_t temp=mudancaRow(gerenciador,i,y,x);
+                if (adicionarCaractere(&blocoRetorno, temp) != 0) {
+                    fprintf(stderr, "Erro ao adicionar caractere no bloco de retorno\n");
+                    return blocoRetorno; // Retorna o blocoRetorno até o ponto onde ele foi atualizado
+                }
+            }
+        }
+
+    }
+    return  blocoRetorno;
+}
 
 //funcao interface (termino algum dia);
 
 void titulo(){
-    printf("\n\n|7/////////////////////////////////////////////////////////////////////////////////////////////////////////7|\n||                                                                                                         ||\n||    AAAA    EEEEEEEEEE   SSSSSSSS    CCCCCCCCCC YY      YY PPPPPPPP   HH      HH EEEEEEEEEE RRRRRRRR     ||\n||  AA    AA  EE          SS           CC         YY      YY PP      PP HH      HH EE         RR      RR   ||\n||  AA    AA  EE         SS            CC          YY    YY  PP      PP HH      HH EE         RR      RR   ||\n|| AAAAAAAAAA EEEEE       SSSSSSSS     CC           YYYYYY   PPPPPPPP   HHHHHHHHHH EEEEE      RRRRRRRR     ||\n|| AA      AA EE                SS     CC             YY     PP         HH      HH EE         RR   RR      ||\n|| AA      AA EE                 SS    CC             YY     PP         HH      HH EE         RR     RR    ||\n|| AA      AA EEEEEEEEEE SSSSSSSS      CCCCCCCCCC     YY     PP         HH      HH EEEEEEEEEE RR      RR   ||\n||                                                                                                         ||\n||uma coloboracao eu, eu mesmo e uma playlist de 17 horas                                                  ||\n|7/////////////////////////////////////////////////////////////////////////////////////////////////////////7|\n\n");
+    printf("|7/////////////////////////////////////////////////////////////////////////////////////////////////////////7|\n||                                                                                                         ||\n||    AAAA    EEEEEEEEEE   SSSSSSSS    CCCCCCCCCC YY      YY PPPPPPPP   HH      HH EEEEEEEEEE RRRRRRRR     ||\n||  AA    AA  EE         SS            CC         YY      YY PP      PP HH      HH EE         RR      RR   ||\n||  AA    AA  EE         SS            CC          YY    YY  PP      PP HH      HH EE         RR      RR   ||\n|| AAAAAAAAAA EEEEE       SSSSSSSS     CC           YYYYYY   PPPPPPPP   HHHHHHHHHH EEEEE      RRRRRRRR     ||\n|| AA      AA EE                 SS    CC             YY     PP         HH      HH EE         RR   RR      ||\n|| AA      AA EE                 SS    CC             YY     PP         HH      HH EE         RR     RR    ||\n|| AA      AA EEEEEEEEEE SSSSSSSS      CCCCCCCCCC     YY     PP         HH      HH EEEEEEEEEE RR      RR   ||\n||                                                                                                         ||\n||uma coloboracao eu, eu mesmo e uma playlist de 17 horas                                                  ||\n|7/////////////////////////////////////////////////////////////////////////////////////////////////////////7|\n\n");
     
 }
 /*
@@ -419,7 +449,14 @@ void benchmark(){//testar se funciona
     GerenciadorBlocos bits;
     inicializaGerenciador(&bits);
     bits=subbytes(&gerenciador);
+    printf("\nsubbytes:\n");
     imprimeBlocos(&bits);
+
+    GerenciadorBlocos shiftedrows;
+    inicializaGerenciador(&shiftedrows);
+    shiftedrows=shiftrows(&bits);
+    printf("\nshifted rows:\n");
+    imprimeBlocos(&shiftedrows);
     free(reconstrucao);
 }
 //main
