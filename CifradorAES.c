@@ -1,3 +1,34 @@
+/*
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⡤⢶⡺⠛⢓⡶⢤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡟⠀⠀⢀⡗⠀⠸⡇⠀⠈⢻⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣼⠁⠀⢀⡞⠀⣀⠀⢳⡀⠀⠈⣧⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⠴⠶⢿⣉⢡⡷⠦⠤⠬⠴⠊⣍⡳⣮⡷⠤⣴⢿⣏⣹⠷⠶⠤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
+   ⠀⠀⠀⠀⠀⠠⣶⣶⣛⡉⠁⣀⣀⣀⣀⣈⣿⠲⠦⣤⣀⡴⣊⣭⡑⢬⣻⣷⠷⠖⣿⠤⠤⣤⣤⣀⣀⣉⣉⣻⣿⡿⠃⠀⠀⠀⠀⠀⠀⠀\n
+   ⠀⠀⠀⠀⠀⠀⠀⠙⠯⣟⡻⠿⣯⣤⣠⠤⠟⠓⢲⡦⣬⣷⣝⣶⣻⣾⣥⣴⣶⡛⠛⠧⢄⣀⣠⡴⠾⠛⣋⡽⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⢶⣤⣉⠙⠿⣶⣞⡁⠀⠀⢸⠋⠛⢹⡇⠀⠀⠀⢉⣽⠶⠛⠉⣁⣴⠖⠋⠁⠀⠀                                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠷⣦⣈⠙⢿⣦⣀⣸⡇⠀⠈⡇⢀⣤⡾⠛⢁⣠⠖⣫⠟⠁⠀⠀⠀⠀⠀    AAAA    EEEEEEEEEE   SSSSSSSS   ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣨⡽⠳⢦⡈⠛⢿⣇⣀⣠⡿⠟⢅⣤⠖⠋⣠⡴⠃⠀⠀⠀⠀⠀⠀⠀  AA    AA  EE         SS           ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠻⣇⠀⠸⣿⣷⣄⡉⠛⢋⣠⣾⣿⠗⠀⢠⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀  AA    AA  EE         SS           ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⠀⠈⠢⡀⠈⠳⠽⠟⠒⠋⠻⠟⠁⠀⢴⠟⣡⣿⠀⠀⠀⠀⠀⠀⠀⠀ AAAAAAAAAA EEEEE       SSSSSSSS    ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⣀⡈⠓⠦⡄⠀⠀⠀⠀⢀⣠⠞⢁⠔⠹⣿⡀⠀⠀⠀⠀⠀⠀⠀ AA      AA EE                 SS   ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠋⠀⣰⣷⣭⣲⡤⠀⠀⠀⠀⠀⠉⠀⠒⠁⠀⠀⢯⠳⣄⡀⠀⠀⠀⠀⠀ AA      AA EE                 SS   ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⡞⠳⢦⣠⣿⠃⣹⠀⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡤⠷⠿⠙⢦⡀⠀⠀⠀ AA      AA EEEEEEEEEE SSSSSSSS     ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
+   ⠀⠀⠀⠀⠀⠀⢀⣠⢶⣫⣿⣿⢿⣦⣀⡿⢿⣰⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣴⡋⠉⢳⡀⢀⢠⣾⣿⣶⣄⡀                                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
+   ⠀⠀⠀⢀⣠⠖⣫⣵⢿⣽⡿⢿⡽⢻⣏⣀⠴⣻⢳⠦⢤⣤⣤⣤⣤⠴⠖⣛⣧⡙⢟⢦⡀⠙⣟⣿⡺⣾⣝⡿⣯⣗⢤⣀⠀⠀⠀⠀⠀⠀\n
+|7/////////////////////////////////////////////////////////////////////7|\n
+||                                                                     ||\n
+|| CCCCCCCCCC YY      YY PPPPPPPP   HH      HH EEEEEEEEEE RRRRRRRR     ||\n
+|| CC         YY      YY PP      PP HH      HH EE         RR      RR   ||\n
+|| CC          YY    YY  PP      PP HH      HH EE         RR      RR   ||\n
+|| CC           YYYYYY   PPPPPPPP   HHHHHHHHHH EEEEE      RRRRRRRR     ||\n
+|| CC             YY     PP         HH      HH EE         RR   RR      ||\n
+|| CC             YY     PP         HH      HH EE         RR     RR    ||\n
+|| CCCCCCCCCC     YY     PP         HH      HH EEEEEEEEEE RR      RR   ||\n
+||                                                                     ||\n
+||uma coloboracao eu, eu mesmo e uma playlist de 17 horas              ||\n
+|7/////////////////////////////////////////////////////////////////////7|\n
+*/
+
 //bem para começar vou colocar aqui as diretrizes do programa, o ultimo cifrador ficou um pouco confuso
 //a tentativa de implementar um ui no terminal comeu muito tempo desnecessário
 
@@ -92,6 +123,13 @@ static const uint8_t sBoxReversa[256] = {
     0x60, 0x51, 0x7f, 0xa9, 0x19, 0xb5, 0x4a, 0x0d, 0x2d, 0xe5, 0x7a, 0x9f, 0x93, 0xc9, 0x9c, 0xef,
     0xa0, 0xe0, 0x3b, 0x4d, 0xae, 0x2a, 0xf5, 0xb0, 0xc8, 0xeb, 0xbb, 0x3c, 0x83, 0x53, 0x99, 0x61,
     0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d
+};
+
+static const uint8_t tabelaMixColumns[4][4]={
+    {2,3,1,1},
+    {1,2,3,1},
+    {1,1,2,3},
+    {3,1,1,2}
 };
 
 //2) trabalhos com struct;
@@ -363,6 +401,8 @@ uint8_t mudancaRow(const GerenciadorBlocos *gerenciador,uint8_t bloco, uint8_t l
     return resultado;
 }
 
+//4.2.2  shiftrows;
+
 GerenciadorBlocos  shiftrows(const GerenciadorBlocos *gerenciador)
 {
     GerenciadorBlocos blocoRetorno;
@@ -389,29 +429,53 @@ GerenciadorBlocos  shiftrows(const GerenciadorBlocos *gerenciador)
     return  blocoRetorno;
 }
 
+//4.3 mixcolumns
+
+//4.3.1 calculos em GF(2^8)
+
+uint8_t multiplicarGF(uint8_t a, uint8_t b) {
+    uint8_t p = 0;
+    while (b) {
+        if (b & 1) p ^= a;
+        a <<= 1;
+        if (a & 0x100) a ^= 0x11B;
+        b >>= 1;
+    }
+    return p;
+}
+//4.3.2 mixcolumns 
+
+GerenciadorBlocos mixcolumns(const GerenciadorBlocos *gerenciador) {
+    GerenciadorBlocos blocoRetorno;
+    inicializaGerenciador(&blocoRetorno);
+
+    for (size_t i = 0; i <= gerenciador->blocoAtual; i++) {
+        for (size_t x = 0; x < NUM_C; x++) { // Para cada coluna
+            for (size_t y = 0; y < NUM_C; y++) { // Para cada linha
+                uint8_t temp = 0;
+                for (size_t k = 0; k < NUM_C; k++) {
+                    temp ^= multiplicarGF(tabelaMixColumns[x][k], gerenciador->blocos[i][k][y]);
+                }
+                // Utilize adicionarCaractere para adicionar o temp ao bloco de retorno
+                if (adicionarCaractere(&blocoRetorno, temp) != 0) {
+                    // Tratamento de erro, se necessário
+                }
+            }
+        }
+    }
+
+    return blocoRetorno;
+}
+
+
 //funcao interface (termino algum dia);
 
 void titulo(){
-    printf("|7/////////////////////////////////////////////////////////////////////////////////////////////////////////7|\n||                                                                                                         ||\n||    AAAA    EEEEEEEEEE   SSSSSSSS    CCCCCCCCCC YY      YY PPPPPPPP   HH      HH EEEEEEEEEE RRRRRRRR     ||\n||  AA    AA  EE         SS            CC         YY      YY PP      PP HH      HH EE         RR      RR   ||\n||  AA    AA  EE         SS            CC          YY    YY  PP      PP HH      HH EE         RR      RR   ||\n|| AAAAAAAAAA EEEEE       SSSSSSSS     CC           YYYYYY   PPPPPPPP   HHHHHHHHHH EEEEE      RRRRRRRR     ||\n|| AA      AA EE                 SS    CC             YY     PP         HH      HH EE         RR   RR      ||\n|| AA      AA EE                 SS    CC             YY     PP         HH      HH EE         RR     RR    ||\n|| AA      AA EEEEEEEEEE SSSSSSSS      CCCCCCCCCC     YY     PP         HH      HH EEEEEEEEEE RR      RR   ||\n||                                                                                                         ||\n||uma coloboracao eu, eu mesmo e uma playlist de 17 horas                                                  ||\n|7/////////////////////////////////////////////////////////////////////////////////////////////////////////7|\n\n");
-    
+    //modelo1,2 e 3 respectivamente
+    //printf("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⡤⢶⡺⠛⢓⡶⢤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡟⠀⠀⢀⡗⠀⠸⡇⠀⠈⢻⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣼⠁⠀⢀⡞⠀⣀⠀⢳⡀⠀⠈⣧⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⠴⠶⢿⣉⢡⡷⠦⠤⠬⠴⠊⣍⡳⣮⡷⠤⣴⢿⣏⣹⠷⠶⠤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠠⣶⣶⣛⡉⠁⣀⣀⣀⣀⣈⣿⠲⠦⣤⣀⡴⣊⣭⡑⢬⣻⣷⠷⠖⣿⠤⠤⣤⣤⣀⣀⣉⣉⣻⣿⡿⠃⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠙⠯⣟⡻⠿⣯⣤⣠⠤⠟⠓⢲⡦⣬⣷⣝⣶⣻⣾⣥⣴⣶⡛⠛⠧⢄⣀⣠⡴⠾⠛⣋⡽⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⢶⣤⣉⠙⠿⣶⣞⡁⠀⠀⢸⠋⠛⢹⡇⠀⠀⠀⢉⣽⠶⠛⠉⣁⣴⠖⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠷⣦⣈⠙⢿⣦⣀⣸⡇⠀⠈⡇⢀⣤⡾⠛⢁⣠⠖⣫⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣨⡽⠳⢦⡈⠛⢿⣇⣀⣠⡿⠟⢅⣤⠖⠋⣠⡴⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠻⣇⠀⠸⣿⣷⣄⡉⠛⢋⣠⣾⣿⠗⠀⢠⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⠀⠈⠢⡀⠈⠳⠽⠟⠒⠋⠻⠟⠁⠀⢴⠟⣡⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⣀⡈⠓⠦⡄⠀⠀⠀⠀⢀⣠⠞⢁⠔⠹⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠋⠀⣰⣷⣭⣲⡤⠀⠀⠀⠀⠀⠉⠀⠒⠁⠀⠀⢯⠳⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⡞⠳⢦⣠⣿⠃⣹⠀⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡤⠷⠿⠙⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⢀⣠⢶⣫⣿⣿⢿⣦⣀⡿⢿⣰⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣴⡋⠉⢳⡀⢀⢠⣾⣿⣶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⢀⣠⠖⣫⣵⢿⣽⡿⢿⡽⢻⣏⣀⠴⣻⢳⠦⢤⣤⣤⣤⣤⠴⠖⣛⣧⡙⢟⢦⡀⠙⣟⣿⡺⣾⣝⡿⣯⣗⢤⣀⠀⠀⠀⠀⠀⠀\n");
+    //printf("|7/////////////////////////////////////////////////////////////////////////////////////////////////////////7|\n||                                                                                                         ||\n||    AAAA    EEEEEEEEEE   SSSSSSSS    CCCCCCCCCC YY      YY PPPPPPPP   HH      HH EEEEEEEEEE RRRRRRRR     ||\n||  AA    AA  EE         SS            CC         YY      YY PP      PP HH      HH EE         RR      RR   ||\n||  AA    AA  EE         SS            CC          YY    YY  PP      PP HH      HH EE         RR      RR   ||\n|| AAAAAAAAAA EEEEE       SSSSSSSS     CC           YYYYYY   PPPPPPPP   HHHHHHHHHH EEEEE      RRRRRRRR     ||\n|| AA      AA EE                 SS    CC             YY     PP         HH      HH EE         RR   RR      ||\n|| AA      AA EE                 SS    CC             YY     PP         HH      HH EE         RR     RR    ||\n|| AA      AA EEEEEEEEEE SSSSSSSS      CCCCCCCCCC     YY     PP         HH      HH EEEEEEEEEE RR      RR   ||\n||                                                                                                         ||\n||uma coloboracao eu, eu mesmo e uma playlist de 17 horas                                                  ||\n|7/////////////////////////////////////////////////////////////////////////////////////////////////////////7|\n\n");
+    printf("   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⡤⢶⡺⠛⢓⡶⢤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡟⠀⠀⢀⡗⠀⠸⡇⠀⠈⢻⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣼⠁⠀⢀⡞⠀⣀⠀⢳⡀⠀⠈⣧⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⠴⠶⢿⣉⢡⡷⠦⠤⠬⠴⠊⣍⡳⣮⡷⠤⣴⢿⣏⣹⠷⠶⠤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠠⣶⣶⣛⡉⠁⣀⣀⣀⣀⣈⣿⠲⠦⣤⣀⡴⣊⣭⡑⢬⣻⣷⠷⠖⣿⠤⠤⣤⣤⣀⣀⣉⣉⣻⣿⡿⠃⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠙⠯⣟⡻⠿⣯⣤⣠⠤⠟⠓⢲⡦⣬⣷⣝⣶⣻⣾⣥⣴⣶⡛⠛⠧⢄⣀⣠⡴⠾⠛⣋⡽⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⢶⣤⣉⠙⠿⣶⣞⡁⠀⠀⢸⠋⠛⢹⡇⠀⠀⠀⢉⣽⠶⠛⠉⣁⣴⠖⠋⠁⠀⠀                                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠷⣦⣈⠙⢿⣦⣀⣸⡇⠀⠈⡇⢀⣤⡾⠛⢁⣠⠖⣫⠟⠁⠀⠀⠀⠀⠀    AAAA    EEEEEEEEEE   SSSSSSSS   ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣨⡽⠳⢦⡈⠛⢿⣇⣀⣠⡿⠟⢅⣤⠖⠋⣠⡴⠃⠀⠀⠀⠀⠀⠀⠀  AA    AA  EE         SS           ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠻⣇⠀⠸⣿⣷⣄⡉⠛⢋⣠⣾⣿⠗⠀⢠⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀  AA    AA  EE         SS           ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⠀⠈⠢⡀⠈⠳⠽⠟⠒⠋⠻⠟⠁⠀⢴⠟⣡⣿⠀⠀⠀⠀⠀⠀⠀⠀ AAAAAAAAAA EEEEE       SSSSSSSS    ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⣀⡈⠓⠦⡄⠀⠀⠀⠀⢀⣠⠞⢁⠔⠹⣿⡀⠀⠀⠀⠀⠀⠀⠀ AA      AA EE                 SS   ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠋⠀⣰⣷⣭⣲⡤⠀⠀⠀⠀⠀⠉⠀⠒⠁⠀⠀⢯⠳⣄⡀⠀⠀⠀⠀⠀ AA      AA EE                 SS   ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⡞⠳⢦⣠⣿⠃⣹⠀⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡤⠷⠿⠙⢦⡀⠀⠀⠀ AA      AA EEEEEEEEEE SSSSSSSS     ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⢀⣠⢶⣫⣿⣿⢿⣦⣀⡿⢿⣰⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣴⡋⠉⢳⡀⢀⢠⣾⣿⣶⣄⡀                                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⢀⣠⠖⣫⣵⢿⣽⡿⢿⡽⢻⣏⣀⠴⣻⢳⠦⢤⣤⣤⣤⣤⠴⠖⣛⣧⡙⢟⢦⡀⠙⣟⣿⡺⣾⣝⡿⣯⣗⢤⣀⠀⠀⠀⠀⠀⠀\n|7/////////////////////////////////////////////////////////////////////7|\n||                                                                     ||\n|| CCCCCCCCCC YY      YY PPPPPPPP   HH      HH EEEEEEEEEE RRRRRRRR     ||\n|| CC         YY      YY PP      PP HH      HH EE         RR      RR   ||\n|| CC          YY    YY  PP      PP HH      HH EE         RR      RR   ||\n|| CC           YYYYYY   PPPPPPPP   HHHHHHHHHH EEEEE      RRRRRRRR     ||\n|| CC             YY     PP         HH      HH EE         RR   RR      ||\n|| CC             YY     PP         HH      HH EE         RR     RR    ||\n|| CCCCCCCCCC     YY     PP         HH      HH EEEEEEEEEE RR      RR   ||\n||                                                                     ||\n||uma coloboracao eu, eu mesmo e uma playlist de 17 horas              ||\n|7/////////////////////////////////////////////////////////////////////7|\n");
 }
-/*
-
-88/////////////////////////////////////////////////////////////////////////////////////////////////////////88
-||                                                                                                         ||
-||    AAAA    EEEEEEEEEE   SSSSSSSS    CCCCCCCCCC YY      YY PPPPPPPP   HH      HH EEEEEEEEEE RRRRRRRR     ||
-||  AA    AA  EE          SS           CC         YY      YY PP      PP HH      HH EE         RR      RR   ||
-||  AA    AA  EE         SS            CC          YY    YY  PP      PP HH      HH EE         RR      RR   ||
-|| AAAAAAAAAA EEEEE       SSSSSSSS     CC           YYYYYY   PPPPPPPP   HHHHHHHHHH EEEEE      RRRRRRRR     || 
-|| AA      AA EE                SS     CC             YY     PP         HH      HH EE         RR   RR      ||
-|| AA      AA EE                 SS    CC             YY     PP         HH      HH EE         RR     RR    ||
-|| AA      AA EEEEEEEEEE SSSSSSSS      CCCCCCCCCC     YY     PP         HH      HH EEEEEEEEEE RR      RR   ||
-||                                                                                                         ||
-||uma coloboracao eu, eu mesmo e uma playlist de 17 horas                                                  ||
-88/////////////////////////////////////////////////////////////////////////////////////////////////////////88
-
-*/
-
 
 // funcao benchmark
 void benchmark(){//testar se funciona
@@ -457,6 +521,15 @@ void benchmark(){//testar se funciona
     shiftedrows=shiftrows(&bits);
     printf("\nshifted rows:\n");
     imprimeBlocos(&shiftedrows);
+
+    GerenciadorBlocos testemixcolumns;
+    inicializaGerenciador(&testemixcolumns);
+    testemixcolumns=mixcolumns(&shiftedrows);
+    printf("\nmixcolumns:\n");
+    imprimeBlocos(&testemixcolumns);
+
+
+
     free(reconstrucao);
 }
 //main
