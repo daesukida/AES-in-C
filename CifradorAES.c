@@ -359,7 +359,6 @@ GerenciadorBlocos subbytes(GerenciadorBlocos *gerenciador) {
 */
 
 
-
 //funcao interface (termino algum dia);
 
 void titulo(){
