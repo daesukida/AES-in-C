@@ -253,7 +253,11 @@ void stringParaBlocos(char* texto, GerenciadorBlocos* gerenciador)
     }
 }
 
-//3.1.3 reconstruir string usando blocos;
+//3.1.3 adicionar blocos em blocos;
+
+//int adicionarBlocosAoGerenciador(GerenciadorBlocos*)
+
+//3.1.4 reconstruir string usando blocos;
 
 // Função para reconstruir a string a partir dos blocos
 
@@ -469,7 +473,7 @@ GerenciadorBlocos mixcolumns(const GerenciadorBlocos *gerenciador) {
 //obs, states são os blocos sendo processados,ou seja ja foram definidos
 //4.4 addRoundKey
 
-GerenciadorBlocos BlocoChave(char* chave)
+GerenciadorBlocos GeraBlocoChave(char* chave)
 {
     GerenciadorBlocos blocoChave;
     inicializaGerenciador(&blocoChave);
@@ -477,10 +481,79 @@ GerenciadorBlocos BlocoChave(char* chave)
     return  blocoChave;
 }
 
+
 //criar round key.
 //4.4.0 KeyExpansion
 
 
+
+uint8_t* ArrayTemp (const GerenciadorBlocos *blocoChave, size_t tamanho){
+    //declara memoria
+    uint8_t *retorno=(uint8_t*)malloc(tamanho*sizeof(uint8_t));
+    if(retorno ==NULL){
+        fprintf(stderr,"Erro ao alocar memória no ArrayTemp\n");
+        exit(1);
+    }
+    int termo=0;
+    for(size_t i=0;i<= blocoChave->blocoAtual ;i++){
+        for(size_t y=0;y<NUM_C;y++){
+            for(size_t x=0;x<NUM_C;x++){
+                if(termo<tamanho){
+                    retorno[termo]=blocoChave->blocos[i][y][x];
+                    termo++;
+                }
+                else{
+                    break;
+                }
+            }
+            if (termo >= tamanho) {
+                break;
+            }
+        }
+        if (termo >= tamanho) {
+            break;
+        }
+    }
+
+    // Retorna o ponteiro para o array alocado
+    return retorno;
+}
+
+
+/*
+uint8_t* ArrayTemp(const GerenciadorBlocos *blocoChave, size_t tamanho) {
+    // Declara memória
+    uint8_t *retorno = (uint8_t*)malloc(tamanho * sizeof(uint8_t));
+    if (retorno == NULL) {
+        fprintf(stderr, "Erro ao alocar memória no ArrayTemp\n");
+        return NULL; // Retorna NULL em vez de usar exit
+    }
+
+    size_t termo = 0;
+    for (size_t i = 0; i <= blocoChave->blocoAtual; i++) {
+        for (size_t y = 0; y < NUM_C; y++) {
+            for (size_t x = 0; x < NUM_C; x++) {
+                if (termo < tamanho) {
+                    retorno[termo] = blocoChave->blocos[i][x][y];
+                    termo++;
+                } else {
+                    // Se o array está cheio, termine a cópia de dados
+                    break;
+                }
+            }
+            if (termo >= tamanho) {
+                break;
+            }
+        }
+        if (termo >= tamanho) {
+            break;
+        }
+    }
+}
+*/
+//transforma blocos em array uint_8
+
+//4.4.1 KeySchedule
 GerenciadorBlocos KeySchedule(const GerenciadorBlocos *blocoChave,size_t tamanhoChave)
 {
     GerenciadorBlocos keySchedule;
@@ -620,7 +693,21 @@ void benchmark(){//testar se funciona
     printf("\nSenha: %s\n", senha);
     imprimeBlocos(&testeSenha);
 
-
+    size_t len = strlen(senha);
+    uint8_t* senhaBytes= ArrayTemp(&testeSenha,len);
+    printf("\nTeste da função  ArrayTemp:\n");
+    for(int i=0;i<len;i++){
+        printf(" 0x%2x",senhaBytes[i]);
+        if( (i+1)% 4 == 0 && i!=0){
+            printf("\n");
+            if((i+1)%16  == 0){
+                printf("\n");
+            }    
+        }
+    }
+    
+    printf("\n0x%2x\n",senhaBytes[20]);
+    printf("\nLen final:%d\n\n",len);
 
     free(reconstrucao);
 }
