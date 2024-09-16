@@ -71,9 +71,9 @@
 #define KEY_OPTION3 256         //chave de 256 bits
 #define KEY_OPTION3_LENGHT 32   //lenght senha 256 bits (32 char)
 
-#define RPK1 10 //repetições da chave opção 1;
-#define RPK2 12 //repetições da chave opção 2;
-#define RPK3 14 //repetições da chave opção 3;
+#define RPK1 11     //quantidade de roundkeys para chave de 128 bits cada uma representa um bloco de 4x4
+#define RPK2 13     //quantidade de roundkeys para chave de 192 bits cada uma representa um bloco de 4x4
+#define RPK3 15     //quantidade de roundkeys para chave de 256 bits cada uma representa um bloco de 4x4
 
 #define NUM_C 4 //Num colunas e linhas 16 bytes/128 bits;
 #define TAM_C 16 //16 bytes
@@ -197,7 +197,7 @@ void imprimeBlocos(const GerenciadorBlocos* gerenciador){
         {
             for (size_t x = 0; x < NUM_C; x++)
         {
-            //printf("%c ",gerenciador->blocos[i][y][x]);
+            printf("%c ",gerenciador->blocos[i][y][x]);
             printf("0x%02x ",gerenciador->blocos[i][y][x]);
         }
         printf("\n");
@@ -466,7 +466,86 @@ GerenciadorBlocos mixcolumns(const GerenciadorBlocos *gerenciador) {
 
     return blocoRetorno;
 }
+//obs, states são os blocos sendo processados,ou seja ja foram definidos
+//4.4 addRoundKey
 
+GerenciadorBlocos BlocoChave(char* chave)
+{
+    GerenciadorBlocos blocoChave;
+    inicializaGerenciador(&blocoChave);
+    stringParaBlocos(chave,&blocoChave);
+    return  blocoChave;
+}
+
+//criar round key.
+//4.4.0 KeyExpansion
+
+
+GerenciadorBlocos KeySchedule(const GerenciadorBlocos *blocoChave,size_t tamanhoChave)
+{
+    GerenciadorBlocos keySchedule;
+    inicializaGerenciador(&keySchedule);
+
+    if(tamanhoChave==KEY_OPTION1_LENGHT)
+    {
+        for(size_t i=0;i<RPK1;i++)
+        {
+            for(size_t y=0;y<NUM_C;y++)
+            {
+                for(size_t x=0;x<NUM_C;x++)
+                {
+
+                }
+            }
+        }
+    }
+    else if(tamanhoChave==KEY_OPTION2_LENGHT)
+    {
+        for(size_t i=0;i<RPK2;i++)
+        {
+            for(size_t y=0;y<NUM_C;y++)
+            {
+                for(size_t x=0;x<NUM_C;x++)
+                {
+
+                }
+            }
+        }
+    }
+
+    else if(tamanhoChave==KEY_OPTION3_LENGHT)
+    {
+        for(size_t i=0;i<RPK3;i++)
+        {
+            for(size_t y=0;y<NUM_C;y++)
+            {
+                for(size_t x=0;x<NUM_C;x++)
+                {
+
+                }
+            }
+        }
+    }
+    return keySchedule;
+}
+
+
+//4.4.1 definicao roundKey
+
+
+
+// roundKey se trata da matriz de dados só que 
+
+/*
+void  criarRoundKey(GerenciadorBlocos *gerenciador, char* senha)
+{
+    stringParaBlocos(senha, &gerenciador);
+
+}*/
+
+//4.4.1 roundKey
+
+//4.5 KeyChedule
 
 //funcao interface (termino algum dia);
 
@@ -510,18 +589,21 @@ void benchmark(){//testar se funciona
     printf("Coluna: %d\n", coluna);
     printf("0x%2x",sBox[teste]);
 
+    //teste subbytes
     GerenciadorBlocos bits;
     inicializaGerenciador(&bits);
     bits=subbytes(&gerenciador);
     printf("\nsubbytes:\n");
     imprimeBlocos(&bits);
 
+    //teste shiftedrows
     GerenciadorBlocos shiftedrows;
     inicializaGerenciador(&shiftedrows);
     shiftedrows=shiftrows(&bits);
     printf("\nshifted rows:\n");
     imprimeBlocos(&shiftedrows);
 
+    //teste mixcollumns
     GerenciadorBlocos testemixcolumns;
     inicializaGerenciador(&testemixcolumns);
     testemixcolumns=mixcolumns(&shiftedrows);
@@ -530,11 +612,22 @@ void benchmark(){//testar se funciona
 
 
 
+    //teste senhas
+    char* senha=("123456781234567812345678");
+    GerenciadorBlocos testeSenha;
+    inicializaGerenciador(&testeSenha);
+    stringParaBlocos(senha,&testeSenha);
+    printf("\nSenha: %s\n", senha);
+    imprimeBlocos(&testeSenha);
+
+
+
     free(reconstrucao);
 }
 //main
 int main(){
     titulo();
+    
     printf("colocarei  aqui o menu#FE\n");
     benchmark();
     
