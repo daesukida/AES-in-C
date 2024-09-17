@@ -132,6 +132,10 @@ static const uint8_t tabelaMixColumns[4][4]={
     {3,1,1,2}
 };
 
+static const uint8_t rCon[10]= {
+    0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36
+};
+
 //2) trabalhos com struct;
 
 //2.1) definicao struct;
@@ -481,9 +485,11 @@ GerenciadorBlocos GeraBlocoChave(char* chave)
     return  blocoChave;
 }
 
-
 //criar round key.
 //4.4.0 KeyExpansion
+
+//4.4.0.1 definicao de blocos de 32bits(4 bytes), onde ocorrerão as alterações de subword, usando a função hexsplitter junto a mudança de valor
+//com a tabela sbox em uma proporção de char; rotword onde ocorrerá a rotação 
 
 uint8_t* ArrayTemp (const GerenciadorBlocos *blocoChave, size_t tamanho){
     //declara memoria
@@ -517,79 +523,86 @@ uint8_t* ArrayTemp (const GerenciadorBlocos *blocoChave, size_t tamanho){
     return retorno;
 }
 
-//agora serão feitas as operações  de keyExpansion onde o array será modificado diversas vezes, depois aplicadas a um conjunto de blocos
-//onde cada bloco corresponderá a uma fase da cryptografia usaremos as constantes.
+
+//4.4.1 SubWord (processo de transformação da senha com uso da sbox)
+//semelhante a função subbytes usada no texto
 
 
+static void SubWord(uint8_t *word){
+    for(size_t i=0; i<4; i++){
+        size_t linha = (word[i] >> 4) & 0x0F;
+        size_t coluna = word[i] & 0x0F;
 
-//transforma blocos em array uint_8
 
-//4.4.1 KeySchedule
-GerenciadorBlocos KeySchedule(const GerenciadorBlocos *blocoChave,size_t tamanhoChave)
-{
-    GerenciadorBlocos keySchedule;
-    inicializaGerenciador(&keySchedule);
+        size_t resultado=((linha*16)+(coluna));
 
-    if(tamanhoChave==KEY_OPTION1_LENGHT)
-    {
-        for(size_t i=0;i<RPK1;i++)
-        {
-            for(size_t y=0;y<NUM_C;y++)
-            {
-                for(size_t x=0;x<NUM_C;x++)
-                {
-
-                }
-            }
-        }
+        word[i]= sBox[resultado];
+        
     }
-    else if(tamanhoChave==KEY_OPTION2_LENGHT)
-    {
-        for(size_t i=0;i<RPK2;i++)
-        {
-            for(size_t y=0;y<NUM_C;y++)
-            {
-                for(size_t x=0;x<NUM_C;x++)
-                {
+}
 
-                }
-            }
-        }
+//4.4.2  RotWord (rotacao de 8 bits ou uma letra)
+static void RotWord(uint8_t *word){
+    uint8_t temp = word[0];
+    for(size_t i = 0; i<3;++i){
+        word[i]=word[i+1];
     }
-
-    else if(tamanhoChave==KEY_OPTION3_LENGHT)
-    {
-        for(size_t i=0;i<RPK3;i++)
-        {
-            for(size_t y=0;y<NUM_C;y++)
-            {
-                for(size_t x=0;x<NUM_C;x++)
-                {
-
-                }
-            }
-        }
-    }
-    return keySchedule;
+    word[3]=temp;
 }
 
 
+//transforma blocos em array uint_8
+// nessa função está inclusa o keySchedule
+
+
+void KeyExpansion(const uint8_t *key, uint8_t *roundKeys, size_t keySize){
+
+    size_t numeroPalavrasNaChave=keySize/NUM_C; //numero de palavras na chave
+    size_t numeroRodadas= numeroPalavrasNaChave+6;
+    size_t NumeroBytes=NUM_C;
+
+    uint8_t temp[4];
+    uint8_t *keyWords = (uint8_t *)key;
+
+    for(size_t i=0; i<numeroPalavrasNaChave;i++){
+        roundKeys[4 * i + 0] = keyWords[4* i +0];    
+        roundKeys[4 * i + 1] = keyWords[4* i +1];
+        roundKeys[4 * i + 2] = keyWords[4* i +2];
+        roundKeys[4 * i + 3] = keyWords[4* i +3];    
+    }
+
+    for(size_t i = numeroPalavrasNaChave; i < NumeroBytes* (numeroRodadas + 1); i++){
+        temp[0]=roundKeys[4*(i-1)+ 0];
+        temp[1]=roundKeys[4*(i-1)+ 1];
+        temp[2]=roundKeys[4*(i-1)+ 2];
+        temp[3]=roundKeys[4*(i-1)+ 3];
+    
+        if(i%numeroPalavrasNaChave==0){
+            RotWord(temp);
+            SubWord(temp);
+            temp[0] ^= rCon[(i/numeroPalavrasNaChave)-1];
+        }
+
+        for(size_t j= 0;j<4;++j){
+            roundKeys[4 * i+j]= roundKeys[4 * (i - numeroPalavrasNaChave) + j]^ temp[j];
+        }
+    }
+}
+
+
+
+//4.4.1 KeySchedule
+
 //4.4.1 definicao roundKey
 
+//5.0 As rodadas finalmente
+
+//primeiramente vamos definir uma forma de cada rodada utilizar de um dos blocos na key expandida,como ela está separada em array
+//será mais facil so limitar o uso da key ate 16 na primeira rodada,16 a 32 na segunda e por ai vai, dessa forma vai ficar maior,
+//mas a implementação vai ficar mais intuitiva
 
 
-// roundKey se trata da matriz de dados só que 
 
-/*
-void  criarRoundKey(GerenciadorBlocos *gerenciador, char* senha)
-{
-    stringParaBlocos(senha, &gerenciador);
-
-}*/
-
-//4.4.1 roundKey
-
-//4.5 KeyChedule
 
 //funcao interface (termino algum dia);
 
@@ -657,7 +670,7 @@ void benchmark(){//testar se funciona
 
 
     //teste senhas
-    char* senha=("123456781234567812345678");
+    char* senha=("12345678123456781234567812345678");
     GerenciadorBlocos testeSenha;
     inicializaGerenciador(&testeSenha);
     stringParaBlocos(senha,&testeSenha);
@@ -679,9 +692,80 @@ void benchmark(){//testar se funciona
     
     printf("\n0x%2x\n",senhaBytes[20]);
     printf("\nLen final:%d\n\n",len);
+    
+    GerenciadorBlocos blocoKeySchedule;
+    inicializaGerenciador(&blocoKeySchedule);
+    
+    if(len == KEY_OPTION1_LENGHT){
+        printf("\nSenha 128 bits\n");
+        uint8_t roundKeys[176];
+        KeyExpansion(senha,roundKeys,16);
+        
+        printf("\n");
 
+        for(int i=0;i<176;i++){
+            
+            printf("0x%2x ",roundKeys[i]);
+            if((i+1)%4==0 &&  i!=0){
+                printf("\n");
+                if(i%16==0 && i!=0){
+                    printf("\n");
+                }
+            }
+
+        }
+    }
+    else if(len == KEY_OPTION2_LENGHT){
+        printf("\nSenha 192 bits\n");
+        uint8_t roundKeys[208];
+        KeyExpansion(senha,roundKeys,24);
+        
+        for(int i=0;i<208;i++){
+            
+            printf("0x%2x ",roundKeys[i]);
+            if((i+1)%4==0 &&  i!=0){
+                printf("\n");
+                if(i%16==0 && i!=0){
+                    printf("\n");
+                }
+            }
+
+        }
+
+    }
+    else if(len == KEY_OPTION3_LENGHT){
+        printf("\nSenha 256 bits\n");
+        uint8_t roundKeys[240];
+        KeyExpansion(senha,roundKeys,32);
+        
+        for(int i=0;i<240;i++){
+            
+            printf("0x%2x ",roundKeys[i]);
+            if((i+1)%4==0 &&  i!=0){
+                printf("\n");
+                if((i+1)%16==0 && i!=0){
+                    printf("\nbloco %d\n",(i+1)/16);
+                }
+            }
+
+        }
+
+    }
+    else{
+        printf("Erro de alocação de Senha, senha invalida");
+    }
+
+    
+    uint8_t testamento =(0x0a);
+
+    printf(" valor SUPIMPA 0x%2x", testamento);
+
+    printf("\n\n------------------FIM DO BENCHMARK------------------\n\n\n\n\n");
     free(reconstrucao);
 }
+
+
+
 //main
 int main(){
     titulo();
