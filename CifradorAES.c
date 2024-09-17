@@ -485,8 +485,6 @@ GerenciadorBlocos GeraBlocoChave(char* chave)
 //criar round key.
 //4.4.0 KeyExpansion
 
-
-
 uint8_t* ArrayTemp (const GerenciadorBlocos *blocoChave, size_t tamanho){
     //declara memoria
     uint8_t *retorno=(uint8_t*)malloc(tamanho*sizeof(uint8_t));
@@ -519,38 +517,11 @@ uint8_t* ArrayTemp (const GerenciadorBlocos *blocoChave, size_t tamanho){
     return retorno;
 }
 
+//agora serão feitas as operações  de keyExpansion onde o array será modificado diversas vezes, depois aplicadas a um conjunto de blocos
+//onde cada bloco corresponderá a uma fase da cryptografia usaremos as constantes.
 
-/*
-uint8_t* ArrayTemp(const GerenciadorBlocos *blocoChave, size_t tamanho) {
-    // Declara memória
-    uint8_t *retorno = (uint8_t*)malloc(tamanho * sizeof(uint8_t));
-    if (retorno == NULL) {
-        fprintf(stderr, "Erro ao alocar memória no ArrayTemp\n");
-        return NULL; // Retorna NULL em vez de usar exit
-    }
 
-    size_t termo = 0;
-    for (size_t i = 0; i <= blocoChave->blocoAtual; i++) {
-        for (size_t y = 0; y < NUM_C; y++) {
-            for (size_t x = 0; x < NUM_C; x++) {
-                if (termo < tamanho) {
-                    retorno[termo] = blocoChave->blocos[i][x][y];
-                    termo++;
-                } else {
-                    // Se o array está cheio, termine a cópia de dados
-                    break;
-                }
-            }
-            if (termo >= tamanho) {
-                break;
-            }
-        }
-        if (termo >= tamanho) {
-            break;
-        }
-    }
-}
-*/
+
 //transforma blocos em array uint_8
 
 //4.4.1 KeySchedule
@@ -718,8 +689,10 @@ int main(){
     printf("colocarei  aqui o menu#FE\n");
     benchmark();
     
+
     //GerenciadorBlocos gerenciador;
     //inicializaGerenciador(&gerenciador);
+
     return 0;
 }
 
