@@ -71,9 +71,9 @@
 #define KEY_OPTION3 256         //chave de 256 bits
 #define KEY_OPTION3_LENGHT 32   //lenght senha 256 bits (32 char)
 
-#define RPK1 11     //quantidade de roundkeys para chave de 128 bits cada uma representa um bloco de 4x4
-#define RPK2 13     //quantidade de roundkeys para chave de 192 bits cada uma representa um bloco de 4x4
-#define RPK3 15     //quantidade de roundkeys para chave de 256 bits cada uma representa um bloco de 4x4
+#define RPK1 10     //quantidade de roundkeys para chave de 128 bits cada uma representa um bloco de 4x4
+#define RPK2 12     //quantidade de roundkeys para chave de 192 bits cada uma representa um bloco de 4x4
+#define RPK3 14     //quantidade de roundkeys para chave de 256 bits cada uma representa um bloco de 4x4
 
 #define NUM_C 4 //Num colunas e linhas 16 bytes/128 bits;
 #define TAM_C 16 //16 bytes
@@ -201,7 +201,7 @@ void imprimeBlocos(const GerenciadorBlocos* gerenciador){
         {
             for (size_t x = 0; x < NUM_C; x++)
         {
-            printf("%c ",gerenciador->blocos[i][y][x]);
+            //printf("%c ",gerenciador->blocos[i][y][x]);
             printf("0x%02x ",gerenciador->blocos[i][y][x]);
         }
         printf("\n");
@@ -590,12 +590,100 @@ void KeyExpansion(const uint8_t *key, uint8_t *roundKeys, size_t keySize){
 }
 
 
-
-//4.4.1 KeySchedule
-
-//4.4.1 definicao roundKey
-
 //5.0 As rodadas finalmente
+
+
+
+GerenciadorBlocos aplicaRoundKey(GerenciadorBlocos*  blocoMensagem, uint8_t *roundKeys, size_t round){
+    GerenciadorBlocos blocoRetorno;
+    inicializaGerenciador(&blocoRetorno);
+
+    for(size_t i=0; i<=blocoMensagem->blocoAtual;i++)
+    {
+        for (size_t y = 0; y < NUM_C; y++)
+        {
+            for(size_t x=0;x<NUM_C;x++){
+                uint8_t temp= blocoMensagem->blocos[i][y][x]^roundKeys[((round*16)+(y*4)+x)];
+                if (adicionarCaractere(&blocoRetorno, temp) != 0) {
+                    fprintf(stderr, "Erro ao adicionar caractere no bloco de retorno\n");
+                    return blocoRetorno; // Retorna o blocoRetorno até o ponto onde ele foi atualizado
+                }
+            }
+        }
+    }
+    printf("\nRodada %d Concluida!",round+1);  
+    return blocoRetorno;
+}
+
+
+
+GerenciadorBlocos rodadas(const GerenciadorBlocos *entrada ,uint8_t*  roundKeys, size_t round, size_t roundfinal){
+    GerenciadorBlocos saida;
+    inicializaGerenciador(&saida);
+    GerenciadorBlocos temp1;
+    inicializaGerenciador(&temp1);
+    GerenciadorBlocos temp2;
+    inicializaGerenciador(&temp2);
+    GerenciadorBlocos temp3;
+    inicializaGerenciador(&temp3);
+
+    if(round==0){
+        saida = aplicaRoundKey((GerenciadorBlocos *)entrada,roundKeys,round);
+       
+    }
+    else if(round>0 && round<roundfinal){
+
+        temp1 = subbytes(entrada);
+        temp2 = shiftrows(&temp1);
+        temp3 = mixcolumns(&temp2);
+        saida = aplicaRoundKey(&temp3,roundKeys,round);
+       
+    }
+    else if(round==roundfinal){
+       
+        temp1 = subbytes(entrada);
+        temp2 = shiftrows(&temp1);
+        saida = aplicaRoundKey(&temp2,roundKeys,round);
+    }
+    return  saida;
+}
+
+
+GerenciadorBlocos cifradorAES(char* mensagemInflada, char* chave,size_t tamanhoChave){
+    
+    
+    GerenciadorBlocos blocoResultado, blocoMensagem,blocoTemp,blocoTemp2;
+    inicializaGerenciador(&blocoResultado);
+    inicializaGerenciador(&blocoMensagem);
+    inicializaGerenciador(&blocoTemp);
+    inicializaGerenciador(&blocoTemp2);
+    size_t roundfinal;
+    
+    printf("\n\nTexto a ser cifrado: '%s'\n",mensagemInflada);
+
+    stringParaBlocos(mensagemInflada,&blocoMensagem);
+
+    if(tamanhoChave == 16){
+        roundfinal=RPK1;
+    }else if(tamanhoChave == 24){
+        roundfinal=RPK2;
+    }else if(tamanhoChave == 32){
+        roundfinal=RPK3;
+    }
+
+    for(size_t i=0; i<roundfinal;i++){
+        if(i==0){
+            blocoTemp= rodadas(&blocoMensagem,chave,i,roundfinal);
+        }
+        else{
+        blocoTemp2 = rodadas(&blocoTemp,chave,i,roundfinal);
+        blocoTemp= blocoTemp2;
+        blocoResultado=blocoTemp;
+        }
+        
+    }
+    return blocoResultado;
+}  
 
 //primeiramente vamos definir uma forma de cada rodada utilizar de um dos blocos na key expandida,como ela está separada em array
 //será mais facil so limitar o uso da key ate 16 na primeira rodada,16 a 32 na segunda e por ai vai, dessa forma vai ficar maior,
@@ -612,6 +700,8 @@ void titulo(){
     //printf("|7/////////////////////////////////////////////////////////////////////////////////////////////////////////7|\n||                                                                                                         ||\n||    AAAA    EEEEEEEEEE   SSSSSSSS    CCCCCCCCCC YY      YY PPPPPPPP   HH      HH EEEEEEEEEE RRRRRRRR     ||\n||  AA    AA  EE         SS            CC         YY      YY PP      PP HH      HH EE         RR      RR   ||\n||  AA    AA  EE         SS            CC          YY    YY  PP      PP HH      HH EE         RR      RR   ||\n|| AAAAAAAAAA EEEEE       SSSSSSSS     CC           YYYYYY   PPPPPPPP   HHHHHHHHHH EEEEE      RRRRRRRR     ||\n|| AA      AA EE                 SS    CC             YY     PP         HH      HH EE         RR   RR      ||\n|| AA      AA EE                 SS    CC             YY     PP         HH      HH EE         RR     RR    ||\n|| AA      AA EEEEEEEEEE SSSSSSSS      CCCCCCCCCC     YY     PP         HH      HH EEEEEEEEEE RR      RR   ||\n||                                                                                                         ||\n||uma coloboracao eu, eu mesmo e uma playlist de 17 horas                                                  ||\n|7/////////////////////////////////////////////////////////////////////////////////////////////////////////7|\n\n");
     printf("   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⡤⢶⡺⠛⢓⡶⢤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡟⠀⠀⢀⡗⠀⠸⡇⠀⠈⢻⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣼⠁⠀⢀⡞⠀⣀⠀⢳⡀⠀⠈⣧⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⠴⠶⢿⣉⢡⡷⠦⠤⠬⠴⠊⣍⡳⣮⡷⠤⣴⢿⣏⣹⠷⠶⠤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠠⣶⣶⣛⡉⠁⣀⣀⣀⣀⣈⣿⠲⠦⣤⣀⡴⣊⣭⡑⢬⣻⣷⠷⠖⣿⠤⠤⣤⣤⣀⣀⣉⣉⣻⣿⡿⠃⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠙⠯⣟⡻⠿⣯⣤⣠⠤⠟⠓⢲⡦⣬⣷⣝⣶⣻⣾⣥⣴⣶⡛⠛⠧⢄⣀⣠⡴⠾⠛⣋⡽⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⢶⣤⣉⠙⠿⣶⣞⡁⠀⠀⢸⠋⠛⢹⡇⠀⠀⠀⢉⣽⠶⠛⠉⣁⣴⠖⠋⠁⠀⠀                                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠷⣦⣈⠙⢿⣦⣀⣸⡇⠀⠈⡇⢀⣤⡾⠛⢁⣠⠖⣫⠟⠁⠀⠀⠀⠀⠀    AAAA    EEEEEEEEEE   SSSSSSSS   ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣨⡽⠳⢦⡈⠛⢿⣇⣀⣠⡿⠟⢅⣤⠖⠋⣠⡴⠃⠀⠀⠀⠀⠀⠀⠀  AA    AA  EE         SS           ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠻⣇⠀⠸⣿⣷⣄⡉⠛⢋⣠⣾⣿⠗⠀⢠⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀  AA    AA  EE         SS           ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⠀⠈⠢⡀⠈⠳⠽⠟⠒⠋⠻⠟⠁⠀⢴⠟⣡⣿⠀⠀⠀⠀⠀⠀⠀⠀ AAAAAAAAAA EEEEE       SSSSSSSS    ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⣀⡈⠓⠦⡄⠀⠀⠀⠀⢀⣠⠞⢁⠔⠹⣿⡀⠀⠀⠀⠀⠀⠀⠀ AA      AA EE                 SS   ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠋⠀⣰⣷⣭⣲⡤⠀⠀⠀⠀⠀⠉⠀⠒⠁⠀⠀⢯⠳⣄⡀⠀⠀⠀⠀⠀ AA      AA EE                 SS   ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⡞⠳⢦⣠⣿⠃⣹⠀⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡤⠷⠿⠙⢦⡀⠀⠀⠀ AA      AA EEEEEEEEEE SSSSSSSS     ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⠀⠀⠀⢀⣠⢶⣫⣿⣿⢿⣦⣀⡿⢿⣰⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣴⡋⠉⢳⡀⢀⢠⣾⣿⣶⣄⡀                                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n   ⠀⠀⠀⢀⣠⠖⣫⣵⢿⣽⡿⢿⡽⢻⣏⣀⠴⣻⢳⠦⢤⣤⣤⣤⣤⠴⠖⣛⣧⡙⢟⢦⡀⠙⣟⣿⡺⣾⣝⡿⣯⣗⢤⣀⠀⠀⠀⠀⠀⠀\n|7/////////////////////////////////////////////////////////////////////7|\n||                                                                     ||\n|| CCCCCCCCCC YY      YY PPPPPPPP   HH      HH EEEEEEEEEE RRRRRRRR     ||\n|| CC         YY      YY PP      PP HH      HH EE         RR      RR   ||\n|| CC          YY    YY  PP      PP HH      HH EE         RR      RR   ||\n|| CC           YYYYYY   PPPPPPPP   HHHHHHHHHH EEEEE      RRRRRRRR     ||\n|| CC             YY     PP         HH      HH EE         RR   RR      ||\n|| CC             YY     PP         HH      HH EE         RR     RR    ||\n|| CCCCCCCCCC     YY     PP         HH      HH EEEEEEEEEE RR      RR   ||\n||                                                                     ||\n||uma coloboracao eu, eu mesmo e uma playlist de 17 horas              ||\n|7/////////////////////////////////////////////////////////////////////7|\n");
 }
+
+
 
 // funcao benchmark
 void benchmark(){//testar se funciona
@@ -693,8 +783,8 @@ void benchmark(){//testar se funciona
     printf("\n0x%2x\n",senhaBytes[20]);
     printf("\nLen final:%d\n\n",len);
     
-    GerenciadorBlocos blocoKeySchedule;
-    inicializaGerenciador(&blocoKeySchedule);
+    GerenciadorBlocos blocoMensagemTesteRoundKey;
+    inicializaGerenciador(&blocoMensagemTesteRoundKey);
     
     if(len == KEY_OPTION1_LENGHT){
         printf("\nSenha 128 bits\n");
@@ -714,6 +804,10 @@ void benchmark(){//testar se funciona
             }
 
         }
+        blocoMensagemTesteRoundKey= aplicaRoundKey(&gerenciador,roundKeys,3);
+        imprimeBlocos(&blocoMensagemTesteRoundKey);
+
+
     }
     else if(len == KEY_OPTION2_LENGHT){
         printf("\nSenha 192 bits\n");
@@ -731,7 +825,9 @@ void benchmark(){//testar se funciona
             }
 
         }
-
+        blocoMensagemTesteRoundKey= aplicaRoundKey(&gerenciador,roundKeys,3);
+        imprimeBlocos(&blocoMensagemTesteRoundKey);
+        
     }
     else if(len == KEY_OPTION3_LENGHT){
         printf("\nSenha 256 bits\n");
@@ -749,7 +845,9 @@ void benchmark(){//testar se funciona
             }
 
         }
-
+        blocoMensagemTesteRoundKey= aplicaRoundKey(&gerenciador,roundKeys,3);
+        imprimeBlocos(&blocoMensagemTesteRoundKey);
+        
     }
     else{
         printf("Erro de alocação de Senha, senha invalida");
@@ -762,6 +860,8 @@ void benchmark(){//testar se funciona
 
     printf("\n\n------------------FIM DO BENCHMARK------------------\n\n\n\n\n");
     free(reconstrucao);
+
+    
 }
 
 
@@ -769,9 +869,53 @@ void benchmark(){//testar se funciona
 //main
 int main(){
     titulo();
+
+    GerenciadorBlocos mensagem;
+    inicializaGerenciador(&mensagem);
+
+    GerenciadorBlocos mensagemCifrada128;
+    inicializaGerenciador(&mensagemCifrada128);
+
+    GerenciadorBlocos mensagemCifrada192;
+    inicializaGerenciador(&mensagemCifrada192);
+
+    GerenciadorBlocos mensagemCifrada256;
+    inicializaGerenciador(&mensagemCifrada256);
+
+    char mensagemOriginal[]= "DecipherAESKey2EncryptDecrypt1CipherTextAES24SecureKeyAES256";
+    char* paddedText = inflateMsg(mensagemOriginal);
+
+    stringParaBlocos(paddedText,&mensagem);
     
-    printf("colocarei  aqui o menu#FE\n");
-    benchmark();
+    char senha128[16]="Mj9oTxW5jY5VFbY9";
+    char senha192[24]="XHdsHY8ylk0aKOtT0bHv9F6R";
+    char senha256[32]="8l2FeSCA2TFavJel6Mwp2f7iWVAsOxrg";
+    
+    printf("\nMensagem Original em blocos\n\n");
+    imprimeBlocos(&mensagem);
+    
+    printf("\n\n");
+    printf("--------------------------------------\n");
+    printf("Mensagem Cifrada com chave de 128 bits");
+    mensagemCifrada128=cifradorAES(paddedText,senha128,KEY_OPTION1_LENGHT);
+    
+    printf("\n\n");
+    imprimeBlocos(&mensagemCifrada128);
+    printf("\n\n");
+    printf("--------------------------------------\n");
+    printf("Mensagem Cifrada com chave de 192 bits");
+    mensagemCifrada192=cifradorAES(paddedText,senha192,KEY_OPTION2_LENGHT);
+    
+    printf("\n\n");
+    imprimeBlocos(&mensagemCifrada192);
+    printf("\n\n");
+    printf("--------------------------------------\n");
+    printf("Mensagem Cifrada com chave de 256 bits");
+    mensagemCifrada256=cifradorAES(paddedText,senha256,KEY_OPTION3_LENGHT);
+    printf("\n\n");
+    imprimeBlocos(&mensagemCifrada256);
+    //printf("colocarei  aqui o menu#FE\n");
+    //benchmark();
     
 
     //GerenciadorBlocos gerenciador;
