@@ -1,32 +1,100 @@
-/*
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⡤⢶⡺⠛⢓⡶⢤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡟⠀⠀⢀⡗⠀⠸⡇⠀⠈⢻⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣼⠁⠀⢀⡞⠀⣀⠀⢳⡀⠀⠈⣧⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⠴⠶⢿⣉⢡⡷⠦⠤⠬⠴⠊⣍⡳⣮⡷⠤⣴⢿⣏⣹⠷⠶⠤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
-   ⠀⠀⠀⠀⠀⠠⣶⣶⣛⡉⠁⣀⣀⣀⣀⣈⣿⠲⠦⣤⣀⡴⣊⣭⡑⢬⣻⣷⠷⠖⣿⠤⠤⣤⣤⣀⣀⣉⣉⣻⣿⡿⠃⠀⠀⠀⠀⠀⠀⠀\n
-   ⠀⠀⠀⠀⠀⠀⠀⠙⠯⣟⡻⠿⣯⣤⣠⠤⠟⠓⢲⡦⣬⣷⣝⣶⣻⣾⣥⣴⣶⡛⠛⠧⢄⣀⣠⡴⠾⠛⣋⡽⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⢶⣤⣉⠙⠿⣶⣞⡁⠀⠀⢸⠋⠛⢹⡇⠀⠀⠀⢉⣽⠶⠛⠉⣁⣴⠖⠋⠁⠀⠀                                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠷⣦⣈⠙⢿⣦⣀⣸⡇⠀⠈⡇⢀⣤⡾⠛⢁⣠⠖⣫⠟⠁⠀⠀⠀⠀⠀    AAAA    EEEEEEEEEE   SSSSSSSS   ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣨⡽⠳⢦⡈⠛⢿⣇⣀⣠⡿⠟⢅⣤⠖⠋⣠⡴⠃⠀⠀⠀⠀⠀⠀⠀  AA    AA  EE         SS           ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠻⣇⠀⠸⣿⣷⣄⡉⠛⢋⣠⣾⣿⠗⠀⢠⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀  AA    AA  EE         SS           ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⠀⠈⠢⡀⠈⠳⠽⠟⠒⠋⠻⠟⠁⠀⢴⠟⣡⣿⠀⠀⠀⠀⠀⠀⠀⠀ AAAAAAAAAA EEEEE       SSSSSSSS    ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⣀⡈⠓⠦⡄⠀⠀⠀⠀⢀⣠⠞⢁⠔⠹⣿⡀⠀⠀⠀⠀⠀⠀⠀ AA      AA EE                 SS   ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠋⠀⣰⣷⣭⣲⡤⠀⠀⠀⠀⠀⠉⠀⠒⠁⠀⠀⢯⠳⣄⡀⠀⠀⠀⠀⠀ AA      AA EE                 SS   ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⡞⠳⢦⣠⣿⠃⣹⠀⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡤⠷⠿⠙⢦⡀⠀⠀⠀ AA      AA EEEEEEEEEE SSSSSSSS     ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
-   ⠀⠀⠀⠀⠀⠀⢀⣠⢶⣫⣿⣿⢿⣦⣀⡿⢿⣰⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣴⡋⠉⢳⡀⢀⢠⣾⣿⣶⣄⡀                                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀\n
+//Academic homework in C AES, ready to implement menu and decoder, but still TODO;
+//the coments are in Portuguese-BR, but there's an summary in english 
+
+//Disclaimer:
+//This is a implementation of AES encryption, its my first code on the matter of AES, i'm pretty sure 
+//there are better ways to implement this code in smaller ways, but still i just wanted to see how far
+//i could go with my own logic and understanding, i'm pretty satisfied with the result and it will be
+//a good point for me to compare when i get better at coding.
+
+//Summary:
+
+//1) declarations;
+
+//  1.1) defines, consts(keySizes,lengths,rounds,blockSize,roundsPerBlock...);
+
+//  1.2) sBox, sBoxI, mixCollumns array, rCom
+
+//2) trabalhos com struct;
+
+//  2.1) definicao struct;
+//  2.2) definicao  de funcoes;
+//      2.2.1) inicialização;
+//      2.2.2)  adiciona caractere ao bloco;
+//      2.2.3) todo
+//  2.3)funcoes para testar funcionamento;
+//      2.3.1) visualização dos blocos;
+
+//3) mensage treatment;
+
+//3.1) blocks/mensage ajusts;
+
+//  3.1.1 size ajusts;
+//  3.1.2 build Blocs from String;
+//  3.1.3 rebuild String from blocs;
+
+//4) Encoder functions/steps
+
+//4.1)subbytes
+
+//  4.1.1 hexdecimal term split
+//  4.1.2 sBox coordinate finder
+//  4.1.3 subbytesFunc
+
+//4.2 shiftrows;
+
+//  4.2.1  shift for each line
+//  4.2.2  shiftrowsFunc;
+
+//4.3 mixcolumns
+
+//  4.3.1 GF(2^8) xor definition;
+//  4.3.2 mixcolumnsFunc
+
+//4.4 addRoundKey
+
+//  4.4.0 KeyExpansion
+//      4.4.0.1 decoder BlockFunc(noUseWithoutDecoder)
+//  4.4.1 SubWord
+//  4.4.2 RotWord (rotacao de 8 bits ou uma letra)
+//5.0 As roundsFunc
+//AESincoderFunc
+
+//todo
+//interfaceFunc
+//decodeFunc
+//6.0 benchmarkFunc
+//7.0 main
+//------end-------
+/* 
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⡤⢶⡺⠛⢓⡶⢤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡟⠀⠀⢀⡗⠀⠸⡇⠀⠈⢻⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣼⠁⠀⢀⡞⠀⣀⠀⢳⡀⠀⠈⣧⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⠴⠶⢿⣉⢡⡷⠦⠤⠬⠴⠊⣍⡳⣮⡷⠤⣴⢿⣏⣹⠷⠶⠤⣤⣀⣀⠀⠀⠀⠀⠀⠀
+   ⠀⠀⠀⠀⠀⠠⣶⣶⣛⡉⠁⣀⣀⣀⣀⣈⣿⠲⠦⣤⣀⡴⣊⣭⡑⢬⣻⣷⠷⠖⣿⠤⠤⣤⣤⣀⣀⣉⣉⣻⣿⡿⠃⠀
+   ⠀⠀⠀⠀⠀⠀⠀⠙⠯⣟⡻⠿⣯⣤⣠⠤⠟⠓⢲⡦⣬⣷⣝⣶⣻⣾⣥⣴⣶⡛⠛⠧⢄⣀⣠⡴⠾⠛⣋⡽⠋⠀⠀⠀
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⢶⣤⣉⠙⠿⣶⣞⡁⠀⠀⢸⠋⠛⢹⡇⠀⠀⠀⢉⣽⠶⠛⠉⣁⣴⠖⠋⠁⠀⠀                                    ⠀⠀⠀
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠷⣦⣈⠙⢿⣦⣀⣸⡇⠀⠈⡇⢀⣤⡾⠛⢁⣠⠖⣫⠟⠁⠀⠀⠀⠀⠀    AAAA    EEEEEEEEEE   SSSSSSSS   ⠀⠀⠀
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣨⡽⠳⢦⡈⠛⢿⣇⣀⣠⡿⠟⢅⣤⠖⠋⣠⡴⠃⠀⠀⠀⠀⠀⠀⠀  AA    AA  EE         SS           ⠀⠀⠀
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠻⣇⠀⠸⣿⣷⣄⡉⠛⢋⣠⣾⣿⠗⠀⢠⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀  AA    AA  EE         SS           ⠀⠀⠀
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⠀⠈⠢⡀⠈⠳⠽⠟⠒⠋⠻⠟⠁⠀⢴⠟⣡⣿⠀⠀⠀⠀⠀⠀⠀⠀ AAAAAAAAAA EEEEE       SSSSSSSS    ⠀⠀⠀
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⣀⡈⠓⠦⡄⠀⠀⠀⠀⢀⣠⠞⢁⠔⠹⣿⡀⠀⠀⠀⠀⠀⠀⠀ AA      AA EE                 SS   ⠀⠀⠀
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠋⠀⣰⣷⣭⣲⡤⠀⠀⠀⠀⠀⠉⠀⠒⠁⠀⠀⢯⠳⣄⡀⠀⠀⠀⠀⠀ AA      AA EE                 SS   ⠀⠀⠀
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⡞⠳⢦⣠⣿⠃⣹⠀⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡤⠷⠿⠙⢦⡀⠀⠀⠀ AA      AA EEEEEEEEEE SSSSSSSS     ⠀⠀⠀
+   ⠀⠀⠀⠀⠀⠀⢀⣠⢶⣫⣿⣿⢿⣦⣀⡿⢿⣰⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣴⡋⠉⢳⡀⢀⢠⣾⣿⣶⣄⡀                                    ⠀⠀⠀
    ⠀⠀⠀⢀⣠⠖⣫⣵⢿⣽⡿⢿⡽⢻⣏⣀⠴⣻⢳⠦⢤⣤⣤⣤⣤⠴⠖⣛⣧⡙⢟⢦⡀⠙⣟⣿⡺⣾⣝⡿⣯⣗⢤⣀⠀⠀⠀⠀⠀⠀\n
-|7/////////////////////////////////////////////////////////////////////7|\n
-||                                                                     ||\n
-|| CCCCCCCCCC YY      YY PPPPPPPP   HH      HH EEEEEEEEEE RRRRRRRR     ||\n
-|| CC         YY      YY PP      PP HH      HH EE         RR      RR   ||\n
-|| CC          YY    YY  PP      PP HH      HH EE         RR      RR   ||\n
-|| CC           YYYYYY   PPPPPPPP   HHHHHHHHHH EEEEE      RRRRRRRR     ||\n
-|| CC             YY     PP         HH      HH EE         RR   RR      ||\n
-|| CC             YY     PP         HH      HH EE         RR     RR    ||\n
-|| CCCCCCCCCC     YY     PP         HH      HH EEEEEEEEEE RR      RR   ||\n
-||                                                                     ||\n
-||uma coloboracao eu, eu mesmo e uma playlist de 17 horas              ||\n
-|7/////////////////////////////////////////////////////////////////////7|\n
+|7/////////////////////////////////////////////////////////////////////7|
+||                                                                     ||
+|| CCCCCCCCCC YY      YY PPPPPPPP   HH      HH EEEEEEEEEE RRRRRRRR     ||
+|| CC         YY      YY PP      PP HH      HH EE         RR      RR   ||
+|| CC          YY    YY  PP      PP HH      HH EE         RR      RR   ||
+|| CC           YYYYYY   PPPPPPPP   HHHHHHHHHH EEEEE      RRRRRRRR     ||
+|| CC             YY     PP         HH      HH EE         RR   RR      ||
+|| CC             YY     PP         HH      HH EE         RR     RR    ||
+|| CCCCCCCCCC     YY     PP         HH      HH EEEEEEEEEE RR      RR   ||
+||                                                                     ||
+||uma coloboracao eu, eu mesmo e uma playlist de 17 horas              ||
+|7/////////////////////////////////////////////////////////////////////7|
 */
 
 //bem para começar vou colocar aqui as diretrizes do programa, o ultimo cifrador ficou um pouco confuso
@@ -71,9 +139,9 @@
 #define KEY_OPTION3 256         //chave de 256 bits
 #define KEY_OPTION3_LENGHT 32   //lenght senha 256 bits (32 char)
 
-#define RPK1 10     //quantidade de roundkeys para chave de 128 bits cada uma representa um bloco de 4x4
-#define RPK2 12     //quantidade de roundkeys para chave de 192 bits cada uma representa um bloco de 4x4
-#define RPK3 14     //quantidade de roundkeys para chave de 256 bits cada uma representa um bloco de 4x4
+#define RPK1 11     //quantidade de roundkeys para chave de 128 bits cada uma representa um bloco de 4x4
+#define RPK2 13     //quantidade de roundkeys para chave de 192 bits cada uma representa um bloco de 4x4
+#define RPK3 15     //quantidade de roundkeys para chave de 256 bits cada uma representa um bloco de 4x4
 
 #define NUM_C 4 //Num colunas e linhas 16 bytes/128 bits;
 #define TAM_C 16 //16 bytes
@@ -135,22 +203,16 @@ static const uint8_t tabelaMixColumns[4][4]={
 static const uint8_t rCon[10]= {
     0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36
 };
-
 //2) trabalhos com struct;
-
 //2.1) definicao struct;
-
 typedef struct{
     Bloco blocos[BLOCOS_MAX];
     size_t blocoAtual;
     size_t posX;
     size_t posY;
 } GerenciadorBlocos;
-
 //2.2) definicao  de funcoes;
-
 //2.2.1) inicialização;
-
 void inicializaGerenciador(GerenciadorBlocos* gerenciador) 
 {
     gerenciador->blocoAtual=0;
@@ -158,9 +220,7 @@ void inicializaGerenciador(GerenciadorBlocos* gerenciador)
     gerenciador->posY=0;
     memset(gerenciador->blocos,0,sizeof(gerenciador->blocos));
 }
-
 //2.2.2)  adiciona caractere ao bloco;
-
 int adicionarCaractere(GerenciadorBlocos* gerenciador, uint8_t caractere)
 {
     if (gerenciador->blocoAtual >=BLOCOS_MAX){
@@ -185,13 +245,9 @@ int adicionarCaractere(GerenciadorBlocos* gerenciador, uint8_t caractere)
     gerenciador->posX++;
     return 0; //sucesso, sossego e paz
 }
-
 //2.2.3) todo
-
 //2.3)funcoes para testar funcionamento;
-
 //2.3.1) visualização dos blocos;
-
 void imprimeBlocos(const GerenciadorBlocos* gerenciador){
     for (size_t i = 0; i <= gerenciador->blocoAtual;i++)
     {
@@ -209,13 +265,9 @@ void imprimeBlocos(const GerenciadorBlocos* gerenciador){
     printf("\n");
     }
 }
-
 //3) trabalhos com a mensagem;
-
 //3.1) definicao de funcoes;
-
 //3.1.1 ajuste de tamanho;
-
 char* inflateMsg(char* texto){          //ajusta o texto para poder ser particionado em blocos de 16bytes;
     size_t lenghtOriginal  = strlen(texto);
     size_t tamPreenchimento=16-(lenghtOriginal%16);
@@ -243,9 +295,7 @@ char* inflateMsg(char* texto){          //ajusta o texto para poder ser particio
 
     return textoRetorno;
 }
-
 //3.1.2 transforma string em blocos;
-
 void stringParaBlocos(char* texto, GerenciadorBlocos* gerenciador)
 {
     for(size_t i= 0;i<strlen(texto);i++)
@@ -256,32 +306,20 @@ void stringParaBlocos(char* texto, GerenciadorBlocos* gerenciador)
         }
     }
 }
-
-//3.1.3 adicionar blocos em blocos;
-
-//int adicionarBlocosAoGerenciador(GerenciadorBlocos*)
-
-//3.1.4 reconstruir string usando blocos;
-
+//3.1.3 reconstruir string usando blocos;
 // Função para reconstruir a string a partir dos blocos
-
 char* reconstruirString(const GerenciadorBlocos* gerenciador){
     size_t totalSize = 0;
-
     for(size_t i=0; i<=gerenciador->blocoAtual;i++)
     {
         totalSize+=NUM_C*NUM_C;
     }
-
     char* textoRetorno = malloc((totalSize+1)*sizeof(char));
-    
     if(textoRetorno==NULL)
     {
         return NULL;
     }
-
     char* ptr = textoRetorno;
-
     for(size_t i = 0; i <= gerenciador->blocoAtual;i++){
         for(size_t y = 0; y < NUM_C; y++){
             for(size_t x = 0; x < NUM_C; x++){
@@ -291,19 +329,12 @@ char* reconstruirString(const GerenciadorBlocos* gerenciador){
             }
         }
     }
-
     *ptr = '\0';
     return textoRetorno;
-
 }
-
-
-//4) Fases de criptografia do AES (esse vai dar problema)
-
+//4) Fases de criptografia do AES
 //4.1)subbytes
-
-//todo encontrar a coordenada na sBox, ex se o valor asc for 0x44, ir na coluna 4 x  linha 4 da sBox, 0xA5 ir na linha 5 coluna 10
-
+//todo encontrar a coordenada na sBox, ex se o valor asc for 0x44, ir na coluna 4 x  linha 4 da sBox, 0xA5 ir na linha 5 coluna 10;
 //4.1.1 divisor de termo hexadecimal
 void hexSplitter (const GerenciadorBlocos  *gerenciador,int i,int y,int x, int *linha, int *coluna)
 {   
@@ -313,7 +344,6 @@ void hexSplitter (const GerenciadorBlocos  *gerenciador,int i,int y,int x, int *
     *linha = (hexValue >> 4) & 0x0F;
     *coluna = hexValue & 0x0F;
 }
-
 //4.1.2  encontrar a coordenada na sBox (como estou usando um array de char de uma dimensão tenho de realizar um calculo para encontrar a linha)
 int sBoxCoordenadas(const GerenciadorBlocos *gerenciador,int i, int y, int x, int *linha, int *coluna)
 {
@@ -323,15 +353,11 @@ int sBoxCoordenadas(const GerenciadorBlocos *gerenciador,int i, int y, int x, in
     int resultado=((linhaSBox*16)+(colunaSBox));//localiza  a posição na sBox
     return resultado;//retorna a posição para manipulações
 }
-
 //4.1.3 subbytes
-
-//a ideia aqui é trocar o valor de cada um dos termos por suas coordenadas na sbox usando a funcao  sBoxCoordenadas eu pessoalmente quero voltar o resultado uma matriz
-
+//a ideia aqui é trocar o valor de cada um dos termos por suas coordenadas na sbox usando a funcao  sBoxCoordenadas eu pessoalmente quero voltar o resultado uma matriz;
 GerenciadorBlocos subbytes(GerenciadorBlocos *gerenciador) {
     GerenciadorBlocos blocoRetorno;
     inicializaGerenciador(&blocoRetorno); // Inicializa o blocoRetorno
-
     //itera sobre os blocos
     for (size_t i = 0; i <= gerenciador->blocoAtual; i++) {
         //itera sobre as linhas e colunas
@@ -345,16 +371,13 @@ GerenciadorBlocos subbytes(GerenciadorBlocos *gerenciador) {
                     fprintf(stderr, "Posição inválida na S-Box: %d\n", posicao);
                     continue;
                 }
-
                 //Obtem o valor da sBox
                 uint8_t temp = sBox[posicao];
-                
                 //add o caractere ao blocoRetorno usando a função adicionarCaractere
                 if (adicionarCaractere(&blocoRetorno, temp) != 0) {
                     fprintf(stderr, "Erro ao adicionar caractere no bloco de retorno\n");
                     return blocoRetorno; // Retorna o blocoRetorno até o ponto onde ele foi atualizado
                 }
-
                 //benchmark() so que local;
                 //printf("Bloco[%zu][%zu][%zu]: 0x%02x (Posição S-Box: %d)\n", i, y, x, temp, posicao);
             }
@@ -362,11 +385,8 @@ GerenciadorBlocos subbytes(GerenciadorBlocos *gerenciador) {
     }
     return blocoRetorno;
 }
-
 //4.2 uma aventura chamada shiftrows;
-
 //4.2.1 rows de linha
-
 uint8_t mudancaRow(const GerenciadorBlocos *gerenciador,uint8_t bloco, uint8_t linha, uint8_t coluna){
     uint8_t resultado;
     if (linha!=0)
@@ -408,17 +428,13 @@ uint8_t mudancaRow(const GerenciadorBlocos *gerenciador,uint8_t bloco, uint8_t l
     }
     return resultado;
 }
-
 //4.2.2  shiftrows;
-
 GerenciadorBlocos  shiftrows(const GerenciadorBlocos *gerenciador)
 {
     GerenciadorBlocos blocoRetorno;
     inicializaGerenciador(&blocoRetorno);
-    
     //itera sobre os blocos primeira linha sem mudanças, segunda linha rotacao 1 byte, terceira linha 2... quarta 3 bytes
     uint8_t temp,temp1,temp2,temp3;
-
     for (size_t i = 0; i <= gerenciador->blocoAtual;i++)
     {
         for(size_t  y = 0; y < NUM_C; y++)
@@ -432,15 +448,11 @@ GerenciadorBlocos  shiftrows(const GerenciadorBlocos *gerenciador)
                 }
             }
         }
-
     }
     return  blocoRetorno;
 }
-
 //4.3 mixcolumns
-
 //4.3.1 calculos em GF(2^8)
-
 uint8_t multiplicarGF(uint8_t a, uint8_t b) {
     uint8_t p = 0;
     while (b) {
@@ -452,7 +464,6 @@ uint8_t multiplicarGF(uint8_t a, uint8_t b) {
     return p;
 }
 //4.3.2 mixcolumns 
-
 GerenciadorBlocos mixcolumns(const GerenciadorBlocos *gerenciador) {
     GerenciadorBlocos blocoRetorno;
     inicializaGerenciador(&blocoRetorno);
@@ -476,7 +487,6 @@ GerenciadorBlocos mixcolumns(const GerenciadorBlocos *gerenciador) {
 }
 //obs, states são os blocos sendo processados,ou seja ja foram definidos
 //4.4 addRoundKey
-
 GerenciadorBlocos GeraBlocoChave(char* chave)
 {
     GerenciadorBlocos blocoChave;
@@ -489,7 +499,7 @@ GerenciadorBlocos GeraBlocoChave(char* chave)
 //4.4.0 KeyExpansion
 
 //4.4.0.1 definicao de blocos de 32bits(4 bytes), onde ocorrerão as alterações de subword, usando a função hexsplitter junto a mudança de valor
-//com a tabela sbox em uma proporção de char; rotword onde ocorrerá a rotação 
+//com a tabela sbox em uma proporção de char; rotword onde ocorrerá a rotação ;
 
 uint8_t* ArrayTemp (const GerenciadorBlocos *blocoChave, size_t tamanho){
     //declara memoria
@@ -522,22 +532,15 @@ uint8_t* ArrayTemp (const GerenciadorBlocos *blocoChave, size_t tamanho){
     // Retorna o ponteiro para o array alocado
     return retorno;
 }
-
-
+//função utilizada unicamente para a função de decode;
 //4.4.1 SubWord (processo de transformação da senha com uso da sbox)
 //semelhante a função subbytes usada no texto
-
-
 static void SubWord(uint8_t *word){
     for(size_t i=0; i<4; i++){
         size_t linha = (word[i] >> 4) & 0x0F;
         size_t coluna = word[i] & 0x0F;
-
-
         size_t resultado=((linha*16)+(coluna));
-
-        word[i]= sBox[resultado];
-        
+        word[i]= sBox[resultado];      
     }
 }
 
@@ -553,7 +556,6 @@ static void RotWord(uint8_t *word){
 
 //transforma blocos em array uint_8
 // nessa função está inclusa o keySchedule
-
 
 void KeyExpansion(const uint8_t *key, uint8_t *roundKeys, size_t keySize){
 
@@ -592,12 +594,9 @@ void KeyExpansion(const uint8_t *key, uint8_t *roundKeys, size_t keySize){
 
 //5.0 As rodadas finalmente
 
-
-
 GerenciadorBlocos aplicaRoundKey(GerenciadorBlocos*  blocoMensagem, uint8_t *roundKeys, size_t round){
     GerenciadorBlocos blocoRetorno;
     inicializaGerenciador(&blocoRetorno);
-
     for(size_t i=0; i<=blocoMensagem->blocoAtual;i++)
     {
         for (size_t y = 0; y < NUM_C; y++)
@@ -610,7 +609,7 @@ GerenciadorBlocos aplicaRoundKey(GerenciadorBlocos*  blocoMensagem, uint8_t *rou
                 }
             }
         }
-    }
+    }  
     printf("\nRodada %d Concluida!",round+1);  
     return blocoRetorno;
 }
@@ -628,20 +627,18 @@ GerenciadorBlocos rodadas(const GerenciadorBlocos *entrada ,uint8_t*  roundKeys,
     inicializaGerenciador(&temp3);
 
     if(round==0){
-        saida = aplicaRoundKey((GerenciadorBlocos *)entrada,roundKeys,round);
-       
+        saida = aplicaRoundKey((GerenciadorBlocos *)entrada,roundKeys,round);     
     }
     else if(round>0 && round<roundfinal){
 
-        temp1 = subbytes(entrada);
+        temp1 = subbytes((GerenciadorBlocos*) entrada);
         temp2 = shiftrows(&temp1);
         temp3 = mixcolumns(&temp2);
         saida = aplicaRoundKey(&temp3,roundKeys,round);
-       
     }
     else if(round==roundfinal){
        
-        temp1 = subbytes(entrada);
+        temp1 = subbytes((GerenciadorBlocos*) entrada);
         temp2 = shiftrows(&temp1);
         saida = aplicaRoundKey(&temp2,roundKeys,round);
     }
@@ -703,7 +700,7 @@ void titulo(){
 
 
 
-// funcao benchmark
+//6.0 funcao benchmark
 void benchmark(){//testar se funciona
     GerenciadorBlocos gerenciador;
     inicializaGerenciador(&gerenciador);
@@ -802,20 +799,17 @@ void benchmark(){//testar se funciona
                     printf("\n");
                 }
             }
-
         }
         blocoMensagemTesteRoundKey= aplicaRoundKey(&gerenciador,roundKeys,3);
         imprimeBlocos(&blocoMensagemTesteRoundKey);
-
-
     }
-    else if(len == KEY_OPTION2_LENGHT){
+    else if(len == KEY_OPTION2_LENGHT)
+    {
         printf("\nSenha 192 bits\n");
         uint8_t roundKeys[208];
         KeyExpansion(senha,roundKeys,24);
-        
-        for(int i=0;i<208;i++){
-            
+        for(int i=0;i<208;i++)
+        {
             printf("0x%2x ",roundKeys[i]);
             if((i+1)%4==0 &&  i!=0){
                 printf("\n");
@@ -823,19 +817,18 @@ void benchmark(){//testar se funciona
                     printf("\n");
                 }
             }
-
         }
         blocoMensagemTesteRoundKey= aplicaRoundKey(&gerenciador,roundKeys,3);
         imprimeBlocos(&blocoMensagemTesteRoundKey);
-        
     }
-    else if(len == KEY_OPTION3_LENGHT){
+    else if(len == KEY_OPTION3_LENGHT)
+    {
         printf("\nSenha 256 bits\n");
         uint8_t roundKeys[240];
         KeyExpansion(senha,roundKeys,32);
         
-        for(int i=0;i<240;i++){
-            
+        for(int i=0;i<240;i++)
+        {
             printf("0x%2x ",roundKeys[i]);
             if((i+1)%4==0 &&  i!=0){
                 printf("\n");
@@ -843,30 +836,23 @@ void benchmark(){//testar se funciona
                     printf("\nbloco %d\n",(i+1)/16);
                 }
             }
-
         }
         blocoMensagemTesteRoundKey= aplicaRoundKey(&gerenciador,roundKeys,3);
-        imprimeBlocos(&blocoMensagemTesteRoundKey);
-        
+        imprimeBlocos(&blocoMensagemTesteRoundKey);  
     }
     else{
         printf("Erro de alocação de Senha, senha invalida");
     }
 
-    
     uint8_t testamento =(0x0a);
 
     printf(" valor SUPIMPA 0x%2x", testamento);
 
     printf("\n\n------------------FIM DO BENCHMARK------------------\n\n\n\n\n");
-    free(reconstrucao);
-
-    
+    free(reconstrucao);   
 }
 
-
-
-//main
+//7.0 main
 int main(){
     titulo();
 
@@ -884,6 +870,7 @@ int main(){
 
     char mensagemOriginal[]= "DecipherAESKey2EncryptDecrypt1CipherTextAES24SecureKeyAES256";
     char* paddedText = inflateMsg(mensagemOriginal);
+    size_t len= strlen(paddedText);
 
     stringParaBlocos(paddedText,&mensagem);
     
@@ -898,29 +885,53 @@ int main(){
     printf("--------------------------------------\n");
     printf("Mensagem Cifrada com chave de 128 bits");
     mensagemCifrada128=cifradorAES(paddedText,senha128,KEY_OPTION1_LENGHT);
+    char* mensagem2= reconstruirString(&mensagemCifrada128);
     
     printf("\n\n");
     imprimeBlocos(&mensagemCifrada128);
-    printf("\n\n");
+    printf("\n\n'");
+    /*
+    for(size_t i=0;i<len;i++){
+        if((i+1)%4==0&&i!=0){
+            printf("\n");
+        }
+        printf("%c",mensagem2[i]);
+
+    }
+    */
+    
+    printf("'\n\n");
     printf("--------------------------------------\n");
     printf("Mensagem Cifrada com chave de 192 bits");
     mensagemCifrada192=cifradorAES(paddedText,senha192,KEY_OPTION2_LENGHT);
-    
     printf("\n\n");
     imprimeBlocos(&mensagemCifrada192);
-    printf("\n\n");
+    char* mensagem3= reconstruirString(&mensagemCifrada192);
+    
+    printf("\n\n'");
+    /*
+    for(size_t i=0;i<len;i++){
+        if((i+1)%4==0&&i!=0){
+            printf("\n");
+        }
+        printf("%c",mensagem3[i]);
+
+    }
+    */
+
+    printf("'\n\n");
+    
+    
     printf("--------------------------------------\n");
     printf("Mensagem Cifrada com chave de 256 bits");
     mensagemCifrada256=cifradorAES(paddedText,senha256,KEY_OPTION3_LENGHT);
     printf("\n\n");
     imprimeBlocos(&mensagemCifrada256);
+    char* mensagem4= reconstruirString(&mensagemCifrada256);
+    
+    printf("--Fim-do-programa--\n\n");
+    
     //printf("colocarei  aqui o menu#FE\n");
     //benchmark();
-    
-
-    //GerenciadorBlocos gerenciador;
-    //inicializaGerenciador(&gerenciador);
-
     return 0;
 }
-
