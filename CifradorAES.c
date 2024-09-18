@@ -17,13 +17,13 @@
 
 //2) trabalhos com struct;
 
-//  2.1) definicao struct;
-//  2.2) definicao  de funcoes;
-//      2.2.1) inicialização;
-//      2.2.2)  adiciona caractere ao bloco;
+//  2.1) definition struct;
+//  2.2) struct Funcs definition;
+//      2.2.1) start struct;
+//      2.2.2)  add char to block;
 //      2.2.3) todo
-//  2.3)funcoes para testar funcionamento;
-//      2.3.1) visualização dos blocos;
+//  2.3)box visualization;
+//      2.3.1) print blocks;
 
 //3) mensage treatment;
 
